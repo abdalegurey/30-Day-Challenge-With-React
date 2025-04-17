@@ -1,0 +1,79 @@
+import React, { useState } from "react";
+import { FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
+const images = [
+  "https://images.pexels.com/photos/30811019/pexels-photo-30811019/free-photo-of-charming-parisian-street-cafe-with-cozy-outdoor-seating.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", 
+  "https://images.pexels.com/photos/31064408/pexels-photo-31064408/free-photo-of-view-through-a-window-to-the-colosseum-in-rome.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", 
+  "https://images.pexels.com/photos/31100834/pexels-photo-31100834/free-photo-of-modern-architectural-buildings-in-copenhagen.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  "https://images.pexels.com/photos/31129522/pexels-photo-31129522/free-photo-of-cherry-blossoms-over-city-street-in-springtime.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  "https://images.pexels.com/photos/31044656/pexels-photo-31044656/free-photo-of-scenic-view-from-airplane-window-over-cloudy-ocean.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+];
+
+const  Gallery= () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const openImage = (index) => {
+    setSelectedImage(images[index]);
+    setCurrentIndex(index);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
+  const prevImage = () => {
+    const newIndex = (currentIndex - 1 + images.length) % images.length;
+    setSelectedImage(images[newIndex]);
+    setCurrentIndex(newIndex);
+  };
+
+  const nextImage = () => {
+    const newIndex = (currentIndex + 1) % images.length;
+    setSelectedImage(images[newIndex]);
+    setCurrentIndex(newIndex);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-10 flex flex-col items-center">
+      <h2 className="text-3xl font-bold mb-6">Image Gallery</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {images.map((img, index) => (
+          <img
+            key={index}
+            src={img}
+            alt={`Thumbnail ${index}`}
+            className="w-full h-40 object-cover rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => openImage(index)}
+          />
+        ))}
+      </div>
+
+      {selectedImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="relative max-w-3xl w-full flex flex-col items-center">
+            <button
+              className="absolute top-5 right-5 text-white text-3xl"
+              onClick={closeModal}
+            >
+              <FaTimes />
+            </button>
+            <img
+              src={selectedImage}
+              alt="Selected"
+              className="max-h-[80vh] w-auto object-contain rounded-lg"
+            />
+            <div className="absolute inset-y-1/2 left-5 text-white text-3xl cursor-pointer" onClick={prevImage}>
+              <FaChevronLeft />
+            </div>
+            <div className="absolute inset-y-1/2 right-5 text-white text-3xl cursor-pointer" onClick={nextImage}>
+              <FaChevronRight />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default  Gallery;
