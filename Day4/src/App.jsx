@@ -1,12 +1,14 @@
 import React from 'react'
-import Gallery from './Components/Gallery'
+import WaetherApp from './Components/WaetherApp'
 
 const App = () => {
   return (
     <div>
-      <h1>welcome</h1>
 
-      <Gallery/>
+      <WaetherApp/>
+     
+
+      
       
     </div>
   )
