@@ -1,10 +1,19 @@
 import React from 'react'
 import { FaSpinner } from "react-icons/fa";
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 const RandomQuote = () => {
 
     const [stateQuote, setStateQuote]= useState(false);
+
+    const categories = {
+        motivation: ["Guusha maaha dhammaad...", "Ha is-dhiibin..."],
+        love: ["Jacaylku waa xalka...", "Jacaylku maaha wax la sugayo..."],
+        life: ["Noloshu waa barasho joogto ah...", "Hadaf la’aan waa sida markab..."],
+      
+      };
+    
+      
 
     const quotes = [
         "Haddii aad doonayso guul, ha ka cabsan guuldarro.",
@@ -41,43 +50,94 @@ const RandomQuote = () => {
         "Fursad kasta oo aad lumiso, mid kale ayaa sugaya."
       ];
       
-     
+    //   useEffect(() => {
+    //     const interval = setInterval(() => {
+    //       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    //       setQuote(randomQuote);
+    //     },1000);
+      
+    //     return () => clearInterval(interval);
+    //   }, []);
+      
       
       
     
 //    const randomQuote= quotes[Math.random()];
 //    console.log(randomQuote)
- const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
-const [Quote,setQuote]=useState(quotes[0])
+
+// const categoryKeys = Object.keys(categories); 
+// console.log("categorieskeys",categoryKeys) // Hel category-yada
+// const randomCategory = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
+// console.log("randomCategoryenglish",randomCategory)
+// const randomQuote = categories[randomCategory][Math.floor(Math.random() * categories[randomCategory].length)];
+
+//console.log(randomQuote);  // Waxaa soo baxaya oraah random ah
+
+
+const [Quote,setQuote]=useState(categories.motivation)
+///const [Quote,setQuote]=useState(quotes[0])
 
 //console.log("llll",quotes[Math.floor(Math.random() * quotes.length)]);
 
 
 // Daabac console-ka
-console.log("randomquote",randomQuote);
+//console.log("randomquote",randomQuote);
 
-const HandleGenerate=()=>{
-    console.log("statequjjs",stateQuote);
-    setStateQuote(true)
- 
-   setTimeout(() => {
-    setStateQuote(false);
-    setQuote(randomQuote)
+const HandleGenerate = () => {
+    // console.log("statequjjs", stateQuote);
+    setStateQuote(true);
+
+    setTimeout(() => {
+        setStateQuote(false);
+
+        // Filtr garee categories iyadoo la eegayo category-ga la doortay
+        const filteredQuotes = categories[selectedCategory] || []; // Hubi in uu jiro
+        const CategoriesRandom = filteredQuotes.length > 0 
+          ? filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)] 
+          : randomQuote
+
+          if(filteredQuotes.length>0){
+            setQuote(CategoriesRandom)
+          }else{
+            setQuote(randomQuote)
+          }
+        //setQuote(CategoriesRandom || randomQuote); 
+        //console.log("filtered",filteredQuotes)
+    }, 1000);
+};
 
 
-    let iconloading=  <FaSpinner className="animate-spin text-4xl text-gray-500" />;
-    console.log("iconloading",iconloading)
-    //setQuote(iconloading)
+
+
   
+const [selectedCategory, setSelectedCategory] = useState("ChooseCategory");
+
+
+      
+const handleCategoryChange = (event) => {
     
-   }, 1000);
+  setSelectedCategory(event.target.value);
+};
 
-  
+//console.log("selected vatgehehe",selectedCategory)
 
-   
+
+
+
+const HandleCopy=()=>{
+
+    navigator.clipboard.writeText(Quote);
+  alert("Copied to clipboard!");
 }
 
+const shareQuote = () => {
+    const url = `https://www.facebook.com/dialog/share?app_id=61568347700426&display=popup&quote=${encodeURIComponent(Quote)}&href=https://yourwebsite.com`;
+    
+    
+    window.open(url, "_blank");
+  };
 // const [quote, setQuote] = useState(quotes[0]); 
 
 // // Function-ka soo saara oraah random ah
@@ -102,9 +162,24 @@ const HandleGenerate=()=>{
             stateQuote ? <FaSpinner className="animate-spin text-4xl text-gray-500" /> : `"${Quote}"`
                }
               </p>
-              <button onClick={HandleGenerate} className="px-6 py-3 bg-pink-700 text-white rounded-lg text-lg font-medium hover:bg-pink-800 transition duration-300">
+             <div className='grid grid-cols-2 gap-2 lg:grid-cols-4'>
+             <button onClick={HandleGenerate} className="px-6 py-3 bg-pink-700 text-white rounded-lg text-lg font-medium hover:bg-pink-800 transition duration-300">
                 Generate Quote
               </button>
+              <button onClick={HandleCopy} className='bg-red-700 text-red-300 p-4 rounded-lg'>
+                Copy
+              </button>
+              <button onClick={shareQuote} className="p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300">
+  Share on Facebook
+</button>
+
+<select onChange={handleCategoryChange} className="p-2 border rounded">
+        <option value="ChooseCategory">Choose Category</option>
+        <option value="motivation">Motivation</option>
+        <option value="love">Love</option>
+        <option value="life">Life</option>
+      </select>
+             </div>
             </div>
           </div>
         );
